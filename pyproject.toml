@@ -15,6 +15,7 @@ ignore_missing_imports = true
 [tool.poetry.dependencies]
 python = "^3.8"
 boto3 = "^1.19.8"
+pydantic = "^1.8.2"
 
 [tool.poetry.dev-dependencies]
 isort = "^5.8.0"
@@ -24,6 +25,8 @@ pydocstyle = "^6.1.1"
 flake9 = "^3.8.3"
 pre-commit = "^2.13.0"
 pytest = "6.0.0"
+moto = "^2.2.12"
+pytest-cov = "^3.0.0"
 
 [tool.isort]
 profile = "black"

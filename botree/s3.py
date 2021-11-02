@@ -1,19 +1,19 @@
-"""Abstrações AWS."""
+"""Botree S3 utilities."""
 
 from pathlib import Path
+from typing import List
 from typing import Optional
 
 from boto3.session import Session
 
 
-class S3(object):
-    """Classe de utilidades para operações com AWS S3."""
+class S3:
+    """AWS S3 operations."""
 
-    def __init__(
-        self, bucket: str, region: str, profile: Optional[str] = None
-    ):
+    def __init__(self, session: Session, **kwargs):
         """
-        Init da classe S3.
+        S3 class init.
+
         Parameters
         ----------
         bucket : str
@@ -21,40 +21,47 @@ class S3(object):
         region : str, optional
             região AWS do bucket
         profile : Optional[str], optional
-            profile da AWS CLI, by default None. Para propósitos de desenvolvimento.
+            profile da AWS CLI, by default None.
         """
-        self.bucket = bucket
-        self.region = region
-        self.profile = profile
-        self.session = Session(profile_name=profile)
-        self.client = self.session.client(
-            service_name="s3",
-            region_name=region,
-        )
+        self.session = session
+        self.client = self.session.client(service_name="s3", **kwargs)
 
-    def download(self, destino: Path, fonte: str, **kwargs):
+    def download(self, bucket: str, source: Path, output: Path, **kwargs):
         """
-        Download de arquivos do S3.
+        Downloads a file from S3.
+
         Parameters
         ----------
-        destino : Path
+        output : Path
             local onde será salvo o arquivo escolhido.
-        fonte : str
+        source : str
             local (chave) do objeto (arquivo) no S3.
         """
-        if destino.is_file():
-            destino.unlink()
+        self.client.download_file(bucket, str(source), str(output), **kwargs)
 
-        self.client.download_file(self.bucket, fonte, str(destino.resolve()), **kwargs)
-
-    def upload(self, fonte: Path, destino: str):
+    def upload(self, bucket: str, source: Path, output: Path, **kwargs):
         """
-        Upload de arquivos para o S3.
+        Uploads a file to S3.
+
         Parameters
         ----------
-        destino : str
+        output : str
             local (chave) do objeto (arquivo) no S3.
-        fonte : str
+        source : str
             local do arquivo a ser enviado.
         """
-        self.client.upload_file(str(fonte.resolve()), self.bucket, destino)
+        self.client.upload_file(str(source), bucket, str(output), **kwargs)
+
+    def create_bucket(self, name: str, **kwargs):
+        """Creates a bucket."""
+        self.client.create_bucket(Bucket=name, **kwargs)
+
+    def list_buckets(self) -> List[str]:
+        """Returns a list of bucket names."""
+        response = self.client.list_buckets()
+        return [bucket["Name"] for bucket in response["Buckets"]]
+
+    def list_objects(self, bucket, prefix: Optional[str] = "", **kwargs) -> List[str]:
+        """Returns a list all objects in a bucket with specified prefix."""
+        response = self.client.list_objects(Bucket=bucket, Prefix=prefix, **kwargs)
+        return [object["Key"] for object in response["Contents"]]
