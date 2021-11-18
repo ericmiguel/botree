@@ -7,6 +7,93 @@ from typing import Optional
 from boto3.session import Session
 
 
+class Bucket:
+    """AWS S3 Bucket level transactions."""
+
+    def __init__(
+        self,
+        session: Session,
+        name: str,
+        client_kwargs: dict = dict(),
+        resource_kwargs: dict = dict(),
+    ):
+        self.name = name
+        self.session = session
+        self.client = self.session.client(service_name="s3", **client_kwargs)
+        self.resource = self.session.resource("s3", **resource_kwargs).Bucket(
+            name=self.name
+        )
+
+    def download(self, source: Path, target: Path, **kwargs):
+        """
+        Downloads a file from S3.
+
+        Parameters
+        ----------
+        source : Path
+            remote file path.
+        target : Path
+            local file path.
+        """
+        self.resource.download_file(str(source), str(target), **kwargs)
+
+    def upload(self, source: Path, target: Path, **kwargs):
+        """
+        Uploads a file to S3.
+
+        Parameters
+        ----------
+        source : Path
+            local file path.
+        target : Path
+            remote file path.
+        """
+        self.resource.upload_file(str(source), str(target), **kwargs)
+
+    def copy(
+        self,
+        source: Path,
+        target: Path,
+        source_bucket: Optional[str] = None,
+        *args,
+        **kwargs
+    ):
+        """
+        Copy an object stored in the bucket or from another bucket.
+
+        If source_bucket is not specified, the object is copied from the current bucket.
+
+        if target_key has no suffix, it assumes target_key is a folder and source_key
+        file name is used.
+
+        Parameters
+        ----------
+        source : Path
+            source file path
+        target : Path
+            target file path. If target_key has no suffix, it assumes target_key
+            is a folder.
+        source_bucket : Optional[str], optional
+            bucket from wich source file will be copied from, by default None
+        """
+        copy_source = {"Bucket": source_bucket, "Key": str(source)}
+
+        if not source_bucket:
+            copy_source.update({"Bucket": self.name})
+
+        if not target.suffix:
+            target = target / source.name
+
+        self.client.copy(copy_source, self.name, str(target), **kwargs)
+
+    def list_objects(self, prefix: Optional[str] = "", *args, **kwargs) -> List[str]:
+        """Returns a list all objects in a bucket with specified prefix."""
+        response = self.client.list_objects(
+            Bucket=self.name, Prefix=prefix, *args, **kwargs
+        )
+        return [object["Key"] for object in response["Contents"]]
+
+
 class S3:
     """AWS S3 operations."""
 
@@ -16,8 +103,6 @@ class S3:
 
         Parameters
         ----------
-        bucket : str
-            nome do bucket S3.
         region : str, optional
             região AWS do bucket
         profile : Optional[str], optional
@@ -26,42 +111,20 @@ class S3:
         self.session = session
         self.client = self.session.client(service_name="s3", **kwargs)
 
-    def download(self, bucket: str, source: Path, output: Path, **kwargs):
-        """
-        Downloads a file from S3.
-
-        Parameters
-        ----------
-        output : Path
-            local onde será salvo o arquivo escolhido.
-        source : str
-            local (chave) do objeto (arquivo) no S3.
-        """
-        self.client.download_file(bucket, str(source), str(output), **kwargs)
-
-    def upload(self, bucket: str, source: Path, output: Path, **kwargs):
-        """
-        Uploads a file to S3.
-
-        Parameters
-        ----------
-        output : str
-            local (chave) do objeto (arquivo) no S3.
-        source : str
-            local do arquivo a ser enviado.
-        """
-        self.client.upload_file(str(source), bucket, str(output), **kwargs)
-
-    def create_bucket(self, name: str, **kwargs):
+    def create_bucket(self, name: str, *args, **kwargs):
         """Creates a bucket."""
-        self.client.create_bucket(Bucket=name, **kwargs)
+        self.client.create_bucket(Bucket=name, *args, **kwargs)
 
     def list_buckets(self) -> List[str]:
         """Returns a list of bucket names."""
         response = self.client.list_buckets()
         return [bucket["Name"] for bucket in response["Buckets"]]
 
-    def list_objects(self, bucket, prefix: Optional[str] = "", **kwargs) -> List[str]:
-        """Returns a list all objects in a bucket with specified prefix."""
-        response = self.client.list_objects(Bucket=bucket, Prefix=prefix, **kwargs)
-        return [object["Key"] for object in response["Contents"]]
+    def bucket(
+        self,
+        name: str,
+        client_kwargs: dict = dict(),
+        resource_kwargs: dict = dict(),
+    ) -> Bucket:
+        """Get a bucket resource instance."""
+        return Bucket(self.session, name, **client_kwargs, **resource_kwargs)

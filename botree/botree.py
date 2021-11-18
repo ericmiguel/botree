@@ -1,11 +1,13 @@
 """Botree core functions."""
 from typing import Optional
 
-from boto3.session import Session
+from boto3.session import Session as boto_session
 from botree.s3 import S3
 
 
-class Botree:
+class Session:
+    """Botree, a friendly Boto3 wrapper."""
+
     def __init__(
         self,
         region: str,
@@ -15,23 +17,17 @@ class Botree:
         profile: Optional[str] = None,
     ):
         """
-        Botree wrapper.
+        Start point to all other AWS services.
 
-        Parameters
-        ----------
-        bucket : str
-            nome do bucket S3.
-        region : str, optional
-            região AWS do bucket
-        profile : Optional[str], optional
-            profile da AWS CLI, by default None.
+        If not specified, the default credentials (usualy in ~/.aws/credentials)
+        are used. Use 'profile' to specify a different AWS profile.
         """
         self.access_key_id = access_key_id
         self.secret_access_key = secret_access_key
         self.session_token = session_token
         self.region = region
         self.profile = profile
-        self.session = Session(
+        self.session = boto_session(
             aws_access_key_id=access_key_id,
             aws_secret_access_key=secret_access_key,
             aws_session_token=session_token,
@@ -41,4 +37,5 @@ class Botree:
 
     @property
     def s3(self) -> S3:
+        """Get a S3 instance."""
         return S3(self.session)
