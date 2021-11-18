@@ -31,7 +31,7 @@ Create a bucket:
 
 ```Python
 session.s3.create_bucket("sample-bucket")
-session.s3.list_buckets()  # ['sample-bucket']
+session.s3.list_buckets()
 ```
 
 Note that all S3 operations will use Python's pathlib to handle directory paths, so let's import it:
@@ -45,10 +45,10 @@ Download and upload:
 ```Python
 source_file= Path("sample_source_file.png")
 target_file= Path("sample_target_file.png")
-session.s3.bucket("bucket-name").upload(source_file, target_file)
+session.s3.bucket("sample-bucket").upload(source_file, target_file)
 
 # downloads are more of the same
-session.s3.bucket("bucket-name").download(source_file, target_file)
+session.s3.bucket("sample-bucket").download(source_file, target_file)
 ```
 
 Copy files:
@@ -56,10 +56,16 @@ Copy files:
 ```python
 source_file= Path("sample_source_file.png")
 target_file= Path("sample_target_file.png")
-session.s3.bucket("bucket-name").copy(source_file, target_file)
+session.s3.bucket("sample-bucket").copy(source_file, target_file)
 
 # you can specify a source bucket to copy a file from
-session.s3.bucket("bucket-name").copy(source_file, target_file, source_bucket="other-bucket")
+session.s3.bucket("sample-bucket").copy(source_file, target_file, source_bucket="other-bucket")
+```
+
+List files:
+
+```python
+session.s3.bucket("sample-bucket").list_objects()
 ```
 
 ## 🏗️ Development
