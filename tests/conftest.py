@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from botree.botree import Botree
+from botree import botree
 from moto import mock_s3
 
 
@@ -15,7 +15,7 @@ def botree_session():
     as suggested by moto docs and still protects the real aws credentials from using.
     """
     with mock_s3():
-        return Botree(
+        return botree.Session(
             access_key_id="testing",
             secret_access_key="testing",
             session_token="testing",
