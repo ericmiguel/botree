@@ -1,15 +1,16 @@
 [tool.poetry]
-name = "modeloprojeto"
-version = "0.1.0"
-description = ""
-authors = ["ericmiguel <e.miguel@targusenergia.com.br>"]
+name = "botree"
+version = "0.2.1"
+description = "A friendly wrapper for boto3."
+authors = ["ericmiguel <ericmiguel@id.uff.br>"]
+keywords = ["boto3", "aws"]
+readme = "README.md"
+license = "MIT"
+repository = "https://github.com/ericmiguel/timeless"
 
-# https://mypy.readthedocs.io/en/stable/config_file.html
+
 [[tool.mypy.overrides]]
-module = [
-    "pandas",
-    "boto3"
-]
+module = ["boto3"]
 ignore_missing_imports = true
 
 [tool.poetry.dependencies]

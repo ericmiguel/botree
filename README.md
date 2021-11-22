@@ -23,8 +23,8 @@ Until I've written the documentation, some dummie examples may be the best way t
 To start a Botree session, use the following:
 
 ```Python
-from botree import botree
-session = botree.Session("us-east-1", profile="dev")
+import botree
+session = botree.session("us-east-1", profile="dev")
 ```
 
 Create a bucket:
@@ -43,8 +43,8 @@ from pathlib import Path
 Download and upload:
 
 ```Python
-source_file= Path("sample_source_file.png")
-target_file= Path("sample_target_file.png")
+source_file = Path("sample_source_file.png")
+target_file = Path("sample_target_file.png")
 session.s3.bucket("sample-bucket").upload(source_file, target_file)
 
 # downloads are more of the same
@@ -54,8 +54,8 @@ session.s3.bucket("sample-bucket").download(source_file, target_file)
 Copy files:
 
 ```python
-source_file= Path("sample_source_file.png")
-target_file= Path("sample_target_file.png")
+source_file = Path("sample_source_file.png")
+target_file = Path("sample_target_file.png")
 session.s3.bucket("sample-bucket").copy(source_file, target_file)
 
 # you can specify a source bucket to copy a file from
