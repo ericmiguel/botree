@@ -10,7 +10,7 @@ repository = "https://github.com/ericmiguel/timeless"
 
 
 [[tool.mypy.overrides]]
-module = ["boto3"]
+module = ["boto3", "boto3.session", "moto"]
 ignore_missing_imports = true
 
 [tool.poetry.dependencies]
