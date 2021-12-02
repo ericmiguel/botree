@@ -1,8 +1,8 @@
 from pathlib import Path
 
+import botree
 import pytest
 
-import botree
 from moto import mock_s3
 
 

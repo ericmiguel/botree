@@ -93,6 +93,17 @@ class Bucket:
         )
         return [object["Key"] for object in response["Contents"]]
 
+    def delete(self, target: Path, **kwargs):
+        """
+        Delete a file from S3.
+
+        Parameters
+        ----------
+        target : Path
+            remote file path.
+        """
+        self.client.delete_object(Bucket=self.name, Key=str(target), **kwargs)
+
 
 class S3:
     """AWS S3 operations."""

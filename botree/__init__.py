@@ -3,8 +3,8 @@
 # flake8: noqa
 
 from botree.botree import Session as session
-from botree.s3 import Bucket as bucket
 from botree.s3 import S3 as s3
+from botree.s3 import Bucket as bucket
 
 
 # module level doc-string

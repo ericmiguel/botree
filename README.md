@@ -68,6 +68,12 @@ List files:
 session.s3.bucket("sample-bucket").list_objects()
 ```
 
+Delete files:
+
+```python
+session.s3.bucket("sample-bucket").delete("sample_target_file")
+```
+
 ## 🏗️ Development
 
 Botree relies on [Poetry](https://github.com/python-poetry/poetry).

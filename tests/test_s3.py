@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import pytest
+
 from moto import mock_s3
 
 
@@ -11,8 +13,8 @@ def test_create_list_buckets(botree_session, botree_test_bucket):
         assert buckets == [botree_test_bucket]
 
 
-def test_listobj_upload_download(botree_session, botree_test_bucket, text_file):
-    """List objects, upload and download methods."""
+def test_listobj_upload_download_delete(botree_session, botree_test_bucket, text_file):
+    """List objects, upload, download and delete methods."""
     with mock_s3():
         botree_session.s3.create_bucket(botree_test_bucket)
 
@@ -29,6 +31,11 @@ def test_listobj_upload_download(botree_session, botree_test_bucket, text_file):
         )
 
         assert Path(download_temp_file).is_file()
+
+        botree_session.s3.bucket(botree_test_bucket).delete(text_file.name)
+
+        with pytest.raises(KeyError):
+            files = botree_session.s3.bucket(botree_test_bucket).list_objects()
 
 
 def test_copy_object(botree_session, botree_test_bucket, text_file):
@@ -47,7 +54,9 @@ def test_copy_object(botree_session, botree_test_bucket, text_file):
         )
 
         botree_session.s3.bucket(botree_test_bucket).copy(
-            uploaded_file_path, uploaded_file_path, source_bucket=other_botree_test_bucket
+            uploaded_file_path,
+            uploaded_file_path,
+            source_bucket=other_botree_test_bucket,
         )
 
         files = botree_session.s3.bucket(botree_test_bucket).list_objects()
