@@ -86,12 +86,25 @@ class Bucket:
 
         self.client.copy(copy_source, self.name, str(target), **kwargs)
 
-    def list_objects(self, prefix: Optional[str] = "", *args, **kwargs) -> List[str]:
+    def list_objects(
+        self,
+        prefix: str = "",
+        only_folders: bool = False,
+        *args, **kwargs
+    ) -> List[str]:
         """Returns a list all objects in a bucket with specified prefix."""
-        response = self.client.list_objects(
-            Bucket=self.name, Prefix=prefix, *args, **kwargs
+        delimiter = "/" if only_folders else ""
+        response_key = "CommonPrefixes" if only_folders else "Contents"
+        response_item_key = "Prefix" if only_folders else "Key"
+
+        if only_folders and not prefix.endswith("/"):
+            prefix = prefix + "/"
+
+        response = self.client.list_objects_v2(
+            Bucket=self.name, Prefix=prefix, Delimiter=delimiter, *args, **kwargs
         )
-        return [object["Key"] for object in response["Contents"]]
+
+        return [object[response_item_key] for object in response[response_key]]
 
     def delete(self, target: Path, **kwargs):
         """
