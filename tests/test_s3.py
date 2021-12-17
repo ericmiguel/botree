@@ -1,4 +1,5 @@
 from pathlib import Path
+import time
 
 import pytest
 
@@ -36,6 +37,26 @@ def test_listobj_upload_download_delete(botree_session, botree_test_bucket, text
 
         with pytest.raises(KeyError):
             files = botree_session.s3.bucket(botree_test_bucket).list_objects()
+
+def test_list_obj_by_date(botree_session, botree_test_bucket, list_of_files):
+    """List objects by date method."""
+    with mock_s3():
+        botree_session.s3.create_bucket(botree_test_bucket)
+
+        ascending_order = [file.name for file in list_of_files]
+        descending_order = ascending_order[::-1]
+
+        for file in list_of_files:
+            botree_session.s3.bucket(botree_test_bucket).upload(file, file.name)
+            time.sleep(1)
+
+        files = botree_session.s3.bucket(botree_test_bucket).list_objects(sort_by_date="ascending")
+
+        assert files == ascending_order
+
+        files = botree_session.s3.bucket(botree_test_bucket).list_objects(sort_by_date="descending")
+
+        assert files == descending_order
 
 
 def test_copy_object(botree_session, botree_test_bucket, text_file):
