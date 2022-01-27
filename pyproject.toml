@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "botree"
-version = "0.2.2"
+version = "0.3.0"
 description = "A friendly wrapper for boto3."
 authors = ["ericmiguel <ericmiguel@id.uff.br>"]
 keywords = ["boto3", "aws"]

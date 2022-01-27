@@ -91,19 +91,20 @@ class Bucket:
         prefix: str = "",
         only_folders: bool = False,
         sort_by_date: Optional[str] = None,
-        *args, **kwargs
+        *args,
+        **kwargs
     ) -> List[str]:
         """
         Returns a list all objects in a bucket with specified prefix.
-        
+
         Parameters
         ----------
         prefix : str
             Prefix to filter objects.
-            
+
         only_folders : bool
             If True, only folders are returned.
-            
+
         sort_by_date : Optional[str]
             If specified, objects are sorted by date. Sort can be either 'ascending' or
             'descending'. Valid only if only_folders is False.
@@ -114,7 +115,7 @@ class Bucket:
         List[str]
             List of objects.
         """
-        get_last_modified = lambda obj: int(obj['LastModified'].strftime('%s'))
+        get_last_modified = lambda obj: int(obj["LastModified"].strftime("%s"))
 
         delimiter = "/" if only_folders else ""
         response_key = "CommonPrefixes" if only_folders else "Contents"
@@ -126,18 +127,25 @@ class Bucket:
         response = self.client.list_objects_v2(
             Bucket=self.name, Prefix=prefix, Delimiter=delimiter, *args, **kwargs
         )
-        
+
         if sort_by_date and response_key == "Contents":
             if sort_by_date == "ascending":
-                sorted_response = [obj[response_item_key] for obj in sorted(response[response_key], key=get_last_modified)]
+                sorted_response = [
+                    obj[response_item_key]
+                    for obj in sorted(response[response_key], key=get_last_modified)
+                ]
             elif sort_by_date == "descending":
-                sorted_response = [obj[response_item_key] for obj in sorted(response[response_key], key=get_last_modified, reverse=True)]
-            
+                sorted_response = [
+                    obj[response_item_key]
+                    for obj in sorted(
+                        response[response_key], key=get_last_modified, reverse=True
+                    )
+                ]
+
             return sorted_response
-        
+
         else:
             return [object[response_item_key] for object in response[response_key]]
-
 
     def delete(self, target: Path, **kwargs):
         """

@@ -3,6 +3,7 @@ from typing import Optional
 
 from boto3.session import Session as boto_session
 from botree.s3 import S3
+from botree.secrets_manager import SecretsManager
 
 
 class Session:
@@ -39,3 +40,8 @@ class Session:
     def s3(self) -> S3:
         """Get a S3 instance."""
         return S3(self.session)
+
+    @property
+    def secrets_manager(self) -> SecretsManager:
+        """Get a SecretsManager instance."""
+        return SecretsManager(self.session)
