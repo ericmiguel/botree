@@ -6,12 +6,12 @@ Botree is a higher level API and text user intercace tool for AWS services.
 
 - ✔️ High level and easy to remember API for AWS services.
 - 🔨 TUI (text user interface) powered by [Textual](https://github.com/willmcgugan/textual).
-- 🔨 Asynchronous execution of I/O tasks.
 
 ## 🧰 Supported AWS services
 
 - ✔️ S3
-- 🔨 Secrets
+- ✔️ Secrets
+- 🔨 CloudWatch
 - 🔨 EC2
 
 ## 💻 Examples
