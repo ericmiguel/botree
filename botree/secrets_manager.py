@@ -1,4 +1,4 @@
-"""Botree S3 utilities."""
+"""Botree Secrets Manager utilities."""
 
 import json
 import uuid
@@ -8,12 +8,12 @@ from typing import Any
 from typing import Dict
 from typing import List
 from typing import Mapping
+from typing import Optional
 from typing import Union
 
 from boto3.session import Session
 from botree import decorators
 from botree import models
-from pydantic import parse_obj_as
 
 
 class SecretsManager:
@@ -30,7 +30,7 @@ class SecretsManager:
         )
 
     @decorators.shorten_response("SecretList")
-    def list_secrets(self, shorten: bool = True, *args, **kwargs) -> dict:
+    def list_secrets(self, shorten: Optional[bool] = True, *args, **kwargs) -> dict:
         """
         Returns a list of all stored secrets.
 
@@ -39,7 +39,7 @@ class SecretsManager:
         Parameters
         ----------
         shorten : bool, optional
-            [description], by default True
+            Exclude the response metadata. By default True.
 
         Returns
         -------
@@ -53,7 +53,7 @@ class SecretsManager:
     @decorators.shorten_response("RandomPassword")
     def generate_password(
         self,
-        shorten: bool = True,
+        shorten: Optional[bool] = True,
         length: int = 32,
         exclude_characters: str = "",
         exclude_numbers: bool = False,
@@ -137,23 +137,21 @@ class SecretsManager:
         Returns
         -------
         Dict[str, Union[str, datetime, models.ResponseMetadata]]
-            [description]
+            Metadata.
         """
-        response = self.client.delete_secret(
-            SecretId=name,
-            RecoveryWindowInDays=recovery_window,
-            ForceDeleteWithoutRecovery=force_delete,
-        )
+        kwargs: Dict[str, Union[int, bool]] = dict()
+        if force_delete:
+            kwargs.update({"ForceDeleteWithoutRecovery": force_delete})
+        else:
+            kwargs.update({"RecoveryWindowInDays": recovery_window})
 
-        response["ResponseMetadata"] = parse_obj_as(
-            models.ResponseMetadata, response["ResponseMetadata"]
-        )
+        response = self.client.delete_secret(SecretId=name, **kwargs)
 
         return response
 
     @decorators.shorten_response("SecretString")
     def get_secret(
-        self, name: str, shorten: bool = True, *args, **kwargs
+        self, name: str, shorten: Optional[bool] = True, *args, **kwargs
     ) -> Dict[str, Union[str, Dict[str, str], List[str], int, datetime]]:
         """
         Get a secret from AWS Secrets Manager by name.
