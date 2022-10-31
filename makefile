@@ -14,15 +14,15 @@ python/format:
 	@echo "INFO: running Black..."
 	@black botree tests
 
-	@echo "INFO: running Autoflake8..."
-	@autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place botree tests --exclude=__init__.py
-
 	@echo "INFO: running Isort..."
 	@isort botree tests
 
 python/lint:
-	@echo "INFO: running mypy..."
-	@mypy botree
+	@echo "INFO: running Autoflake8..."
+	@autoflake --remove-all-unused-imports --recursive --remove-unused-variables --in-place botree tests --exclude=__init__.py
 
 	@echo "INFO: running Pydocstyle.."
 	@pydocstyle botree
+
+	@echo "INFO: running mypy..."
+	@mypy botree
