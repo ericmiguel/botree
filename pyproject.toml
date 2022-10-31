@@ -1,33 +1,35 @@
 [tool.poetry]
 name = "botree"
-version = "0.3.0"
+version = "0.3.6"
 description = "A friendly wrapper for boto3."
 authors = ["ericmiguel <ericmiguel@id.uff.br>"]
 keywords = ["boto3", "aws"]
 readme = "README.md"
 license = "MIT"
-repository = "https://github.com/ericmiguel/timeless"
-
+repository = "https://github.com/ericmiguel/botree"
+include = ["botree/py.typed"]
 
 [[tool.mypy.overrides]]
-module = ["boto3", "boto3.session", "moto"]
+module = ["moto"]
 ignore_missing_imports = true
 
 [tool.poetry.dependencies]
 python = "^3.8"
 boto3 = "^1.19.8"
 pydantic = "^1.8.2"
+boto3-stubs = {extras = ["essential"], version = "^1.25.4"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
+flake8-pyproject = "^1.1.0.post0"
 isort = "^5.8.0"
-black = "^21.6b0"
+black = "^22.9.0"
 mypy = "^0.902"
 pydocstyle = "^6.1.1"
-flake9 = "^3.8.3"
 pre-commit = "^2.13.0"
 pytest = "6.0.0"
 moto = "^2.2.12"
 pytest-cov = "^3.0.0"
+autoflake = "^1.7.7"
 
 [tool.isort]
 profile = "black"

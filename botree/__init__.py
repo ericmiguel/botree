@@ -1,17 +1,14 @@
 """Botree - A friendly wrapper for boto3."""
 
-# flake8: noqa
+from .core import Session
+from .core import Session as session
+from .core import S3
+from .s3 import S3 as s3
+from .s3 import Bucket
+from .s3 import Bucket as bucket
 
-from botree.botree import Session as session
-from botree.s3 import S3 as s3
-from botree.s3 import Bucket as bucket
+__all__ = ['Session', 'session', 'S3', 's3', 'Bucket', 'bucket']
 
 
 # module level doc-string
-__doc__ = """
-botree - A friendly wrapper for boto3.
-=====================================================================
-
-**Botree** aims to abstract and optimize the use of the powerful Boto3 by easing
-its lower-level features with a little syntactic sugar.
-"""
+__doc__ = """Botree - A friendly wrapper for boto3."""

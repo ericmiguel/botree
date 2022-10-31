@@ -21,6 +21,7 @@ def shorten_response(response_key: str) -> Callable:
     Callable
         decorated function without metadata.
     """
+
     def wrapper(func):
         def wrapped(*args, **kwds):
             result = func(*args, **kwds)

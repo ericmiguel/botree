@@ -1,6 +1,7 @@
 """Botree S3 utilities."""
 
 from pathlib import Path
+from typing import Generator
 from typing import List
 from typing import Optional
 
@@ -26,7 +27,7 @@ class Bucket:
 
     def download(self, source: Path, target: Path, **kwargs):
         """
-        Downloads a file from S3.
+        Download a file from S3.
 
         Parameters
         ----------
@@ -39,7 +40,7 @@ class Bucket:
 
     def upload(self, source: Path, target: Path, **kwargs):
         """
-        Uploads a file to S3.
+        Upload a file to S3.
 
         Parameters
         ----------
@@ -84,68 +85,82 @@ class Bucket:
         if not target.suffix:
             target = target / source.name
 
-        self.client.copy(copy_source, self.name, str(target), **kwargs)
+        self.client.copy(copy_source, self.name, str(target), **kwargs)  # type: ignore
 
-    def list_objects(
-        self,
-        prefix: str = "",
-        only_folders: bool = False,
-        sort_by_date: Optional[str] = None,
-        *args,
-        **kwargs
+    def list_files(
+        self, prefix: str = "", reverse: bool = False, *args, **kwargs
     ) -> List[str]:
         """
-        Returns a list all objects in a bucket with specified prefix.
+        List and sort (by date) all files in a given prefix.
 
         Parameters
         ----------
         prefix : str
-            Prefix to filter objects.
-
-        only_folders : bool
-            If True, only folders are returned.
-
-        sort_by_date : Optional[str]
-            If specified, objects are sorted by date. Sort can be either 'ascending' or
-            'descending'. Valid only if only_folders is False.
-            OBS: Descending order corresponds to the latest files first.
+            S3 prefix.
+        reverse : bool, optional
+            Reverse (descending) date sort, by default False
 
         Returns
         -------
         List[str]
-            List of objects.
+            Paths to files.
         """
-        get_last_modified = lambda obj: int(obj["LastModified"].strftime("%s"))
+        response = self.client.list_objects_v2(
+            Bucket=self.name, Prefix=prefix, Delimiter="", *args, **kwargs
+        )
 
-        delimiter = "/" if only_folders else ""
-        response_key = "CommonPrefixes" if only_folders else "Contents"
-        response_item_key = "Prefix" if only_folders else "Key"
+        date_sorted = sorted(
+            response["Contents"],  # type: ignore
+            key=lambda x: x["LastModified"],  # type: ignore
+            reverse=reverse,
+        )
 
-        if only_folders and not prefix.endswith("/"):
+        keys = [key["Key"] for key in date_sorted]  # type: ignore
+
+        return keys
+
+    def list_folders(self, prefix: str = "", *args, **kwargs) -> List[str]:
+        """
+        List all folders in a given prefix.
+
+        Parameters
+        ----------
+        prefix : str
+            S3 prefix.
+
+        Returns
+        -------
+        List[str]
+            Paths to folders.
+        """
+        if not prefix.endswith("/"):
             prefix = prefix + "/"
 
         response = self.client.list_objects_v2(
-            Bucket=self.name, Prefix=prefix, Delimiter=delimiter, *args, **kwargs
+            Bucket=self.name, Prefix=prefix, Delimiter="/", *args, **kwargs
         )
 
-        if sort_by_date and response_key == "Contents":
-            if sort_by_date == "ascending":
-                sorted_response = [
-                    obj[response_item_key]
-                    for obj in sorted(response[response_key], key=get_last_modified)
-                ]
-            elif sort_by_date == "descending":
-                sorted_response = [
-                    obj[response_item_key]
-                    for obj in sorted(
-                        response[response_key], key=get_last_modified, reverse=True
-                    )
-                ]
+        keys = [key["Prefix"] for key in response["CommonPrefixes"]]  # type: ignore
 
-            return sorted_response
+        return keys
 
-        else:
-            return [object[response_item_key] for object in response[response_key]]
+    def paginate_objects(self, prefix: str = "", page_size: int = 1000) -> Generator:
+        """
+        Return a list all objects in a bucket with specified prefix.
+
+        Paginator is useful when you have 1000s of files in S3.
+        S3 list_objects_v2 can list at max 1000 files in one go.
+        :return: None
+        """
+        paginator = self.client.get_paginator("list_objects_v2")
+
+        response = paginator.paginate(
+            Bucket=self.name, Prefix=prefix, PaginationConfig={"PageSize": page_size}
+        )
+
+        for page in response:
+            files = page.get("Contents")
+            yield files
 
     def delete(self, target: Path, **kwargs):
         """
@@ -177,13 +192,13 @@ class S3:
         self.client = self.session.client(service_name="s3", **kwargs)
 
     def create_bucket(self, name: str, *args, **kwargs):
-        """Creates a bucket."""
+        """Create a bucket."""
         self.client.create_bucket(Bucket=name, *args, **kwargs)
 
     def list_buckets(self) -> List[str]:
-        """Returns a list of bucket names."""
+        """Return a list of bucket names."""
         response = self.client.list_buckets()
-        return [bucket["Name"] for bucket in response["Buckets"]]
+        return [bucket["Name"] for bucket in response["Buckets"]]  # type: ignore
 
     def bucket(
         self,
