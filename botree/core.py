@@ -50,7 +50,7 @@ class Session:
 
     @property
     def cost_explorer(self) -> CostExplorer:
-        """Get a SecretsManager instance."""
+        """Get a CostExplorer instance."""
         return CostExplorer(self.session)
 
     @property
