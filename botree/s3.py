@@ -178,16 +178,7 @@ class S3:
     """AWS S3 operations."""
 
     def __init__(self, session: Session, **kwargs):
-        """
-        S3 class init.
-
-        Parameters
-        ----------
-        region : str, optional
-            região AWS do bucket
-        profile : Optional[str], optional
-            profile da AWS CLI, by default None.
-        """
+        """S3 class init."""
         self.session = session
         self.client = self.session.client(service_name="s3", **kwargs)
 
