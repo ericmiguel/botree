@@ -27,7 +27,7 @@ mypy = "^0.902"
 pydocstyle = "^6.1.1"
 pre-commit = "^2.13.0"
 pytest = "6.0.0"
-moto = "^2.2.12"
+moto = "^4.1.13"
 pytest-cov = "^3.0.0"
 autoflake = "^1.7.7"
 
