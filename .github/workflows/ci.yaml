@@ -55,7 +55,7 @@ jobs:
       - name: Run Mypy
         run: pdm run mypy botree --enable-incomplete-features
       - name: Run Pytest
-        run: pdm run pytest --cov=botree tests/datetime
+        run: pdm run pytest --cov=botree tests/
   update_docs:
     runs-on: ubuntu-latest
     steps:
