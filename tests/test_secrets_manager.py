@@ -19,9 +19,7 @@ def test_list_secrets(botree_session):
 
 
 def test_create_a_secret(botree_session):
-
     with mock_secretsmanager():
-
         new_secret_name = "botree-dev"
 
         botree_session.secrets_manager.create_secret(
@@ -36,9 +34,7 @@ def test_create_a_secret(botree_session):
 
 
 def test_delete_a_secret(botree_session):
-
     with mock_secretsmanager():
-
         new_secret_name = "botree-dev"
 
         botree_session.secrets_manager.create_secret(
@@ -55,9 +51,7 @@ def test_delete_a_secret(botree_session):
 
 
 def test_get_a_secret(botree_session):
-
     with mock_secretsmanager():
-
         new_secret_name = "botree-dev"
 
         botree_session.secrets_manager.create_secret(

@@ -2,6 +2,7 @@
 from typing import Optional
 
 from boto3.session import Session as boto_session
+
 from botree.cost_explorer import CostExplorer
 from botree.logs import Logs
 from botree.s3 import S3

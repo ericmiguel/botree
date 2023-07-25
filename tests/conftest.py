@@ -1,9 +1,10 @@
 from pathlib import Path
 
-import botree
 import pytest
 
 from moto import mock_s3
+
+import botree
 
 
 @pytest.fixture(scope="function")

@@ -1,3 +1,4 @@
+# botree
 # Botree: a friendly wrapper for boto3
 
 Botree is a higher level API and text user intercace tool for AWS services.
@@ -76,16 +77,16 @@ session.s3.bucket("sample-bucket").delete("sample_target_file")
 
 ## 🏗️ Development
 
-Botree relies on [Poetry](https://github.com/python-poetry/poetry).
+Botree relies on [PDM](https://pdm.fming.dev/latest/).
 
 Install the Python dependencies with:
 
 ```bash
-poetry install
+pdm install
 ```
 
 ## ⚗️ Testing
 
 ```bash
-poetry run pytest --cov=botree tests/
+pdm run pytest --cov=botree tests/
 ```
