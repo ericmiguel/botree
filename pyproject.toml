@@ -65,6 +65,7 @@ test = [
 docs = [
     "mkdocs>=1.4.3",
     "mkdocs-material>=9.1.19",
+    "mkdocstrings[python]>=0.22.0",
 ]
 [build-system]
 requires = ["pdm-backend"]
