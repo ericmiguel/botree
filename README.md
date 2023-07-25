@@ -43,6 +43,10 @@ session.s3.bucket("sample-bucket").upload(source_file, target_file)
 session.s3.bucket("sample-bucket").download(source_file, target_file)
 ```
 
+## 📜 Docs
+
+The docs are under development, but it's (very) early stage is already [available](https://ericmiguel.github.io/botree/).
+
 ## 🏗️ Development
 
 Botree relies on [PDM](https://pdm.fming.dev/latest/).
@@ -58,3 +62,9 @@ pdm install
 ```bash
 pdm run pytest --cov=botree tests/
 ```
+
+## 🖖 Contributors
+
+<a href = "https://github.com/Tanu-N-Prabhu/Python/graphs/contributors">
+  <img src = "https://contrib.rocks/image?repo = ericmiguel/botree"/>
+</a>
