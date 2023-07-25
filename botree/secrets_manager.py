@@ -7,8 +7,6 @@ from datetime import datetime
 from typing import Any
 from typing import Dict
 from typing import List
-from typing import Mapping
-from typing import Optional
 from typing import Union
 
 from boto3.session import Session

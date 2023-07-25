@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_get_costs(botree_session, monkeypatch):
     """Get costs of AWS infrastructure based on time period."""
     monkeypatch.setattr(botree_session.cost_explorer.session, "client", mocked_ce)

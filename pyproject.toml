@@ -23,6 +23,18 @@ lines_between_types = 1
 use_parentheses = true
 filter_files = true
 
+[tool.mypy]
+# disallow_untyped_defs = true
+show_error_codes = true
+no_implicit_optional = true
+# warn_return_any = true
+# warn_unused_ignores = true
+exclude = ["scripts", "docs", "tests"]
+
+[[tool.mypy.overrides]]
+module = "moto.*"
+ignore_missing_imports = true
+
 [tool.flake8]
 max-line-length = 88
 max-complexity = 10
