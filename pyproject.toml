@@ -1,35 +1,17 @@
-[tool.poetry]
+[project]
 name = "botree"
-version = "0.3.6"
+version = "0.4.0"
 description = "A friendly wrapper for boto3."
-authors = ["ericmiguel <ericmiguel@id.uff.br>"]
-keywords = ["boto3", "aws"]
+authors = [
+    {name = "ericmiguel", email = "eric.mrib@gmail.com"},
+]
+dependencies = [
+    "boto3>=1.28.10",
+    "boto3-stubs>=1.28.10",
+]
+requires-python = ">=3.10"
 readme = "README.md"
-license = "MIT"
-repository = "https://github.com/ericmiguel/botree"
-include = ["botree/py.typed"]
-
-[[tool.mypy.overrides]]
-module = ["moto"]
-ignore_missing_imports = true
-
-[tool.poetry.dependencies]
-python = "^3.8"
-boto3 = "^1.19.8"
-pydantic = "^1.8.2"
-boto3-stubs = {extras = ["essential"], version = "^1.25.4"}
-
-[tool.poetry.group.dev.dependencies]
-flake8-pyproject = "^1.1.0.post0"
-isort = "^5.8.0"
-black = "^22.9.0"
-mypy = "^0.902"
-pydocstyle = "^6.1.1"
-pre-commit = "^2.13.0"
-pytest = "6.0.0"
-moto = "^4.1.13"
-pytest-cov = "^3.0.0"
-autoflake = "^1.7.7"
+license = {text = "MIT"}
 
 [tool.isort]
 profile = "black"
@@ -39,9 +21,7 @@ include_trailing_comma = true
 lines_after_imports = 2
 lines_between_types = 1
 use_parentheses = true
-src_paths = ["poetry", "tests"]
 filter_files = true
-known_first_party = "poetry"
 
 [tool.flake8]
 max-line-length = 88
@@ -54,20 +34,38 @@ exclude = [
     ".pytest_cache",
     ".mypy_cache"
 ]
-ignore = [  # alertas e erros por conta do black
-    "E501", # linha longa
-    "E203", # espaço antes de ':'
-    "E225", # sem espaço ao redor de operadores 
-    "W503", # quebra de linha antes de um operador binário
-    "W504"  # quebra de linha após um operador binário line
+ignore = [  # black warnings and errors
+    "E501",
+    "E203",
+    "E225",
+    "W503",
+    "W504"
 ]
 
 [tool.pydocstyle]
 convention = "numpy"
 add-ignore = "D401"
-match = '(?!test_|tests).*\.py'  # ignora arquivos python contendo "test_" ou "tests"
-match-dir = "[^\tests|.].*"  # ignora diretórios iniciados com "." ou "tests"
+match = '(?!test_|tests).*\.py'
+match-dir = "[^\tests|.].*"
 
+[tool.pdm.dev-dependencies]
+lint-and-format = [
+    "black>=23.7.0",
+    "isort>=5.12.0",
+    "mypy>=1.4.1",
+    "pydocstyle>=6.3.0",
+    "autoflake>=2.2.0",
+    "Flake8-pyproject>=1.2.3",
+]
+test = [
+    "pytest>=7.4.0",
+    "moto>=4.1.13",
+    "pytest-cov>=4.1.0",
+]
+docs = [
+    "mkdocs>=1.4.3",
+    "mkdocs-material>=9.1.19",
+]
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
