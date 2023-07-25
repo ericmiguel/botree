@@ -12,8 +12,6 @@ from typing import Optional
 from typing import Union
 
 from boto3.session import Session
-from botree import decorators
-from botree import models
 
 
 class SecretsManager:
@@ -29,8 +27,7 @@ class SecretsManager:
             service_name="secretsmanager", **client_kwargs
         )
 
-    @decorators.shorten_response("SecretList")
-    def list_secrets(self, shorten: Optional[bool] = True, *args, **kwargs) -> dict:
+    def list_secrets(self, *args, **kwargs) -> dict:
         """
         Returns a list of all stored secrets.
 
@@ -50,7 +47,6 @@ class SecretsManager:
 
         return secrets
 
-    @decorators.shorten_response("RandomPassword")
     def generate_password(
         self,
         shorten: Optional[bool] = True,
@@ -62,7 +58,7 @@ class SecretsManager:
         exclude_lowercase: bool = False,
         exclude_space: bool = True,
         include_each_type: bool = True,
-    ) -> Mapping[Dict[str, str], Dict[str, models.ResponseMetadata]]:
+    ) -> dict:
         r"""
         Generates a strong random password.
 
@@ -117,7 +113,7 @@ class SecretsManager:
 
     def delete_secret(
         self, name: str, recovery_window: int = 30, force_delete: bool = False
-    ) -> Dict[str, Union[str, datetime, models.ResponseMetadata]]:
+    ) -> dict:
         """
         Delete an existing secret.
 
@@ -149,7 +145,6 @@ class SecretsManager:
 
         return response
 
-    @decorators.shorten_response("SecretString")
     def get_secret(
         self, name: str, shorten: Optional[bool] = True, *args, **kwargs
     ) -> Dict[str, Union[str, Dict[str, str], List[str], int, datetime]]:
@@ -202,7 +197,7 @@ class SecretsManager:
             Description=description,
             SecretString=json.dumps(secret),
             *args,
-            **kwargs
+            **kwargs,
         )
 
         return self.get_secret(name, shorten=True)

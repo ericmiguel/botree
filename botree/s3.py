@@ -57,7 +57,7 @@ class Bucket:
         target: Path,
         source_bucket: Optional[str] = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """
         Copy an object stored in the bucket or from another bucket.
