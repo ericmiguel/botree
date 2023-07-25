@@ -42,19 +42,3 @@ target_file = Path("sample_target_file.png")
 session.s3.bucket("sample-bucket").upload(source_file, target_file)
 session.s3.bucket("sample-bucket").download(source_file, target_file)
 ```
-
-## 🏗️ Development
-
-Botree relies on [PDM](https://pdm.fming.dev/latest/).
-
-Install the Python dependencies with:
-
-```bash
-pdm install
-```
-
-## ⚗️ Testing
-
-```bash
-pdm run pytest --cov=botree tests/
-```

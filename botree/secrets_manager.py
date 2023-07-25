@@ -31,12 +31,7 @@ class SecretsManager:
         """
         Returns a list of all stored secrets.
 
-        Acctually, this returns a list of all secrets within the Boto3 limit of 100.
-
-        Parameters
-        ----------
-        shorten : bool, optional
-            Exclude the response metadata. By default True.
+        Actually, this returns a list of all secrets within the Boto3 limit of 100.
 
         Returns
         -------
@@ -49,7 +44,6 @@ class SecretsManager:
 
     def generate_password(
         self,
-        shorten: Optional[bool] = True,
         length: int = 32,
         exclude_characters: str = "",
         exclude_numbers: bool = False,
@@ -64,8 +58,6 @@ class SecretsManager:
 
         Parameters
         ----------
-        shorten : bool, optional.
-            Exclude the response metadata. By default True.
         length : int, optional
             The length of the password. If you don't include this parameter,
             by default 32
@@ -146,20 +138,15 @@ class SecretsManager:
         return response
 
     def get_secret(
-        self, name: str, shorten: Optional[bool] = True, *args, **kwargs
+        self, name: str, *args, **kwargs
     ) -> Dict[str, Union[str, Dict[str, str], List[str], int, datetime]]:
         """
         Get a secret from AWS Secrets Manager by name.
-
-        Optionally, output can be shortened by selecting only the secret itself.
 
         Parameters
         ----------
         name : str
             Secret name as in AWS Secrets Manager.
-        shorten : bool, optional
-            Automatically filters the JSON and removes the response details,
-            by default True
 
         Returns
         -------
@@ -200,4 +187,4 @@ class SecretsManager:
             **kwargs,
         )
 
-        return self.get_secret(name, shorten=True)
+        return self.get_secret(name)
