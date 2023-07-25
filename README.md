@@ -65,6 +65,6 @@ pdm run pytest --cov=botree tests/
 
 ## 🖖 Contributors
 
-<a href = "https://github.com/Tanu-N-Prabhu/Python/graphs/contributors">
-  <img src = "https://contrib.rocks/image?repo = ericmiguel/botree"/>
+<a href="https://github.com/ericmiguel/botree/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ericmiguel/botree" />
 </a>
