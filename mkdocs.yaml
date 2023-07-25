@@ -1,0 +1,72 @@
+site_name: Botree
+site_url: https://ericmiguel.github.io/botree
+site_description: A friendly wrapper for boto3.
+copyright: Copyright &copy; 2023 Eric Miguel
+
+theme:
+  name: material
+  palette: 
+    - scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/toggle-switch-off-outline 
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: amber
+      default: true
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotate 
+
+repo_name: ericmiguel/botree
+repo_url: https://github.com/ericmiguel/botree
+
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin 
+      link: https://www.linkedin.com/in/ericmrib
+    - icon: fontawesome/brands/github
+      link: https://github.com/ericmiguel
+
+nav:
+- Introduction: index.md
+- Session:
+    - Reference: session/reference.md
+- S3:
+  - Reference: s3/reference.md
+- Secrets Manager:
+  - Reference: secrets_manager/reference.md
+- Cloudwatch Logs:
+  - Reference: logs/reference.md
+- Cost Explorer:
+  - Reference: cost_explorer/reference.md
+
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+plugins:
+- mkdocstrings:
+    handlers:
+      python:
+        options:
+          heading_level: 2
+          show_root_full_path: true
+          show_root_members_full_path: true
+          show_category_heading: true
+          docstring_style: "numpy"
+          merge_init_into_class: true
+          docstring_section_style: list
+          show_signature_annotations: true
+          show_submodules: true
