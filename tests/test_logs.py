@@ -1,5 +1,6 @@
 import pytest
 
+
 def test_execute_query(botree_session, monkeypatch):
     """Execute query on AWS CloudWatch Logs."""
     monkeypatch.setattr(botree_session.cost_explorer.session, "client", mocked_logs)
@@ -28,8 +29,5 @@ class MockLogs:
             "queryId": "mocked-id",
         }
 
-
     def get_query_results(*args, **kwargs):
-        return {
-            "status": "Complete"
-        }
+        return {"status": "Complete"}
