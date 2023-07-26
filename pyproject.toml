@@ -9,7 +9,7 @@ dependencies = [
     "boto3>=1.28.10",
     "boto3-stubs>=1.28.10",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.9"
 readme = "README.md"
 license = {text = "MIT"}
 
